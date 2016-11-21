@@ -1,4 +1,4 @@
-// socket server example, handles multiple clients using threads
+// socket server example, handles multiple clients using threads //
 
 #include <stdio.h>
 #include <string.h>    //strlen
