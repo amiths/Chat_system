@@ -1,12 +1,83 @@
-/ socket server example, handles multiple clients using threads
+// socket server example, handles multiple clients using threads
 
-#include<stdio.h>
-#include<string.h>    //strlen
-#include<stdlib.h>    //strlen
-#include<sys/socket.h>
-#include<arpa/inet.h> //inet_addr
-#include<unistd.h>    //write
-#include<pthread.h> //for threading , link with lpthread
+#include <stdio.h>
+#include <string.h>    //strlen
+#include <stdlib.h>    //strlen
+#include <sys/socket.h>
+#include <arpa/inet.h> //inet_addr
+#include <unistd.h>    //write
+#include <pthread.h> //for threading , link with lpthread
+#include <stddef.h>
+
+
+struct node {
+  int client_id;
+  struct node *next;
+}*head;
+
+void add( int id )
+{
+    struct node *temp;
+    temp=(struct node *)malloc(sizeof(struct node));
+    temp->client_id=id;
+    if (head== NULL)
+    {
+    head=temp;
+    head->next=NULL;
+    }
+    else
+    {
+    temp->next=head;
+    head=temp;
+    }
+}
+
+
+int delete(int id)
+{
+    struct node *temp, *prev;
+    temp=head;
+    while(temp!=NULL)
+    {
+    if(temp->client_id==id)
+    {
+        if(temp==head)
+        {
+        head=temp->next;
+        free(temp);
+        return 1;
+        }
+        else
+        {
+        prev->next=temp->next;
+        free(temp);
+        return 1;
+        }
+    }
+    else
+    {
+        prev=temp;
+        temp= temp->next;
+    }
+    }
+    return 0;
+}
+
+void  display()
+{
+    struct node* r=head;
+    if(r==NULL)
+    {
+    return;
+    }
+    while(r!=NULL)
+    {
+    printf("%d ",r->client_id);
+    r=r->next;
+    }
+    printf("\n");
+}
+
 
 //the thread function
 void *connection_handler(void *);
@@ -45,15 +116,16 @@ int main(int argc , char *argv[])
     puts("Waiting for incoming connections...");
     c = sizeof(struct sockaddr_in);
 
-        c=sizeof(struct sockaddr_in);
-       while(client_sock=accept(socket_desc,(struct sockaddr*)&client,(socklen_t*)&c))
+    c=sizeof(struct sockaddr_in);
+       while(client_sock = accept(socket_desc,(struct sockaddr*)&client,(socklen_t*)&c))
        {
         puts("Connection accepted");
 
         pthread_t sniffer_thread;
         new_sock = malloc(1);
         *new_sock = client_sock;
-
+        printf("-----%d-------\n", client_sock );
+        add(client_sock);
         if( pthread_create( &sniffer_thread , NULL ,  connection_handler , (void*) new_sock) < 0)
         {
             perror("could not create thread");
@@ -61,6 +133,7 @@ int main(int argc , char *argv[])
         }
 
         puts("Handler assigned");
+        display();
     }
 
     if (client_sock < 0)
@@ -84,7 +157,8 @@ void *connection_handler(void *socket_desc)
       while((n=recv(sock,client_message,2000,0))>0)
       {
 
-        send(sock,client_message,n,0);
+        printf("RECIEVED: %s\n", client_message );
+        //send(sock,client_message,n,0);
       }
       close(sock);
 
