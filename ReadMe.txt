@@ -1,10 +1,3 @@
-
-CNT5106c (Computer Networks)
-Project
-
-Team Members : Amith Sreedhar
-		Sanjay Nair
-
 Programming language used : C
 
 Files present : server.c
@@ -36,13 +29,6 @@ COMMANDS :  Clients can use the following commands to perform different operatio
 
 	     Occassinally, there might be a messag saying Message from in the client terminal. This is because of a message recieved through a listener thread of the client 		     which gets printed on the screen of the client. However, the user can go ahead and type one of the above mentioned commands to continue operation.
 
-Contributions:
-
-Amith Sreedhar ( ufid : 33351813)
-Worked on the File sending interface and operations.
-
-Sanjay Nair:	(ufid: 85543944)
-Worked on the message sending interface and operations, error handling.
 
 Notes:
 	    *Press control+C in a client’s program to remove it from the chat group.
